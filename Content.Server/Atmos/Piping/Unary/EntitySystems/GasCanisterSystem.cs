@@ -136,7 +136,7 @@ public sealed class GasCanisterSystem : EntitySystem
 
         for (int i = 0; i < containedGasArray.Length; i++)
         {
-            containedGasDict.Add((Gas)i, canister.Air[i]);
+            containedGasDict.Add((Gas) i, canister.Air[i]);
         }
 
         _adminLogger.Add(LogType.CanisterValve, impact, $"{ToPrettyString(args.Session.AttachedEntity.GetValueOrDefault()):player} set the valve on {ToPrettyString(uid):canister} to {args.Valve:valveState} while it contained [{string.Join(", ", containedGasDict)}]");
@@ -156,7 +156,7 @@ public sealed class GasCanisterSystem : EntitySystem
         if (!_nodeContainer.TryGetNode(nodeContainer, canister.PortName, out PortablePipeNode? portNode))
             return;
 
-        if (portNode.NodeGroup is PipeNet {NodeCount: > 1} net)
+        if (portNode.NodeGroup is PipeNet { NodeCount: > 1 } net)
         {
             MixContainerWithPipeNet(canister.Air, net.Air);
         }
@@ -207,7 +207,8 @@ public sealed class GasCanisterSystem : EntitySystem
         if (!TryComp<ActorComponent>(args.User, out var actor))
             return;
 
-        if (CheckLocked(uid, component, args.User))
+        const bool playFeedback = true;
+        if (CheckLocked(uid, component, args.User, playFeedback))
             return;
 
         // Needs to be here so the locked check still happens if the canister
@@ -224,7 +225,8 @@ public sealed class GasCanisterSystem : EntitySystem
         if (!TryComp<ActorComponent>(args.User, out var actor))
             return;
 
-        if (CheckLocked(uid, component, args.User))
+        const bool playFeedback = false;
+        if (CheckLocked(uid, component, args.User, playFeedback))
             return;
 
         _ui.TryOpen(uid, GasCanisterUiKey.Key, actor.PlayerSession);
@@ -243,7 +245,8 @@ public sealed class GasCanisterSystem : EntitySystem
         }
 
         // Preventing inserting a tank since if its locked you cant remove it.
-        if (!CheckLocked(uid, component, args.User.Value))
+        const bool playFeedback = true;
+        if (!CheckLocked(uid, component, args.User.Value, playFeedback))
             return;
 
         args.Cancelled = true;
@@ -308,12 +311,14 @@ public sealed class GasCanisterSystem : EntitySystem
     /// <returns>
     /// True if locked, false otherwise.
     /// </returns>
-    private bool CheckLocked(EntityUid uid, GasCanisterComponent comp, EntityUid user)
+    private bool CheckLocked(EntityUid uid, GasCanisterComponent comp, EntityUid user, bool playFeedback)
     {
         if (TryComp<LockComponent>(uid, out var lockComp) && lockComp.Locked)
         {
-            _popup.PopupEntity(Loc.GetString("gas-canister-popup-denied"), uid, user);
-            _audio.PlayPvs(comp.AccessDeniedSound, uid);
+            if (playFeedback)
+            {
+                _audio.PlayPvs(comp.AccessDeniedSound, uid);
+            }
 
             return true;
         }
