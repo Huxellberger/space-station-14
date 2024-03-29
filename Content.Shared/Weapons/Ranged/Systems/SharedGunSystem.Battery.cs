@@ -40,7 +40,7 @@ public abstract partial class SharedGunSystem
 
         if (ammoCountChanged)
         {
-            UpdateAmmoCount(uid, false);
+            UpdateAmmoCount(uid);
         }
     }
 

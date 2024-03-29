@@ -58,12 +58,11 @@ public sealed partial class GunSystem
         RaiseLocalEvent(uid, ev, false);
     }
 
-    protected override void UpdateAmmoCount(EntityUid uid, bool prediction = true)
+    protected override void UpdateAmmoCount(EntityUid uid)
     {
         // Don't use resolves because the method is shared and there's no compref and I'm trying to
         // share as much code as possible
-        if (prediction && !Timing.IsFirstTimePredicted ||
-            !TryComp<AmmoCounterComponent>(uid, out var clientComp))
+        if (!TryComp<AmmoCounterComponent>(uid, out var clientComp))
         {
             return;
         }

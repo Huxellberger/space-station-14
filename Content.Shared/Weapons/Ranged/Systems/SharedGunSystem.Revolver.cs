@@ -35,7 +35,7 @@ public partial class SharedGunSystem
             return;
 
         Cycle(component);
-        UpdateAmmoCount(uid, prediction: false);
+        UpdateAmmoCount(uid);
         Dirty(uid, component);
     }
 
@@ -83,7 +83,7 @@ public partial class SharedGunSystem
         // Handle spins
         if (oldIndex != state.CurrentIndex)
         {
-            UpdateAmmoCount(uid, prediction: false);
+            UpdateAmmoCount(uid);
         }
     }
 
@@ -319,7 +319,7 @@ public partial class SharedGunSystem
         if (anyEmpty)
         {
             Audio.PlayPredicted(component.SoundEject, revolverUid, user);
-            UpdateAmmoCount(revolverUid, prediction: false);
+            UpdateAmmoCount(revolverUid);
             UpdateRevolverAppearance(revolverUid, component);
             Dirty(revolverUid, component);
         }
@@ -408,7 +408,7 @@ public partial class SharedGunSystem
             }
         }
 
-        UpdateAmmoCount(uid, prediction: false);
+        UpdateAmmoCount(uid);
         UpdateRevolverAppearance(uid, component);
         Dirty(uid, component);
     }
