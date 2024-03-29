@@ -32,9 +32,16 @@ public abstract partial class SharedGunSystem
         if (args.Current is not BatteryAmmoProviderComponentState state)
             return;
 
+        var ammoCountChanged = component.Shots != state.Shots;
+
         component.Shots = state.Shots;
         component.Capacity = state.MaxShots;
         component.FireCost = state.FireCost;
+
+        if (ammoCountChanged)
+        {
+            UpdateAmmoCount(uid, false);
+        }
     }
 
     private void OnBatteryGetState(EntityUid uid, BatteryAmmoProviderComponent component, ref ComponentGetState args)
