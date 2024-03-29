@@ -207,8 +207,7 @@ public sealed class GasCanisterSystem : EntitySystem
         if (!TryComp<ActorComponent>(args.User, out var actor))
             return;
 
-        const bool playFeedback = true;
-        if (CheckLocked(uid, component, args.User, playFeedback))
+        if (CheckLocked(uid, component, args.User, playFeedback: true))
             return;
 
         // Needs to be here so the locked check still happens if the canister
@@ -225,8 +224,7 @@ public sealed class GasCanisterSystem : EntitySystem
         if (!TryComp<ActorComponent>(args.User, out var actor))
             return;
 
-        const bool playFeedback = false;
-        if (CheckLocked(uid, component, args.User, playFeedback))
+        if (CheckLocked(uid, component, args.User, playFeedback: false))
             return;
 
         _ui.TryOpen(uid, GasCanisterUiKey.Key, actor.PlayerSession);
@@ -245,8 +243,7 @@ public sealed class GasCanisterSystem : EntitySystem
         }
 
         // Preventing inserting a tank since if its locked you cant remove it.
-        const bool playFeedback = true;
-        if (!CheckLocked(uid, component, args.User.Value, playFeedback))
+        if (!CheckLocked(uid, component, args.User.Value, playFeedback: true))
             return;
 
         args.Cancelled = true;
